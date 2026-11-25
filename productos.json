@@ -1,0 +1,34 @@
+[
+    { "id": 1, "cat": "tortas", "activo": true, "nombre": "Chocotorta de Autor", "desc": "Versión refinada con dulce de leche artesanal y cacao amargo.", "precio": 18500, "img": "4.jpg" },
+    { "id": 2, "cat": "tortas", "activo": true, "nombre": "Red Velvet", "desc": "Bizcocho húmedo de cacao suave con frosting de queso crema.", "precio": 22500, "img": "8.jpg" },
+    { "id": 3, "cat": "tortas", "activo": true, "nombre": "Tiramisú", "desc": "Clásico italiano con bizcochos húmedos al café, crema de mascarpone y cacao.", "precio": 20000, "img": "7.jpg" },
+    { "id": 4, "cat": "tortas", "activo": true, "nombre": "Mousse de Chocolate y Frutilla", "desc": "Delicada mousse aireada de chocolate intenso combinada con frutillas frescas.", "precio": 21500, "img": "9.jpg" },
+    { "id": 5, "cat": "tortas", "activo": true, "nombre": "Torta de Nuez", "desc": "Base húmeda y aromática de nuez con abundante dulce de leche y merengue.", "precio": 23000, "img": "12.jpg" },
+    { "id": 6, "cat": "tortas", "activo": true, "nombre": "Lemon Pie", "desc": "Masa sablée crujiente, suave crema de limón real y copitos de merengue tostado.", "precio": 19000, "img": "1.jpg" },
+    { "id": 7, "cat": "tortas", "activo": true, "nombre": "Lima Pie", "desc": "Fresca y vivaz tarta con cremoso de limas seleccionadas y copitos de crema.", "precio": 19500, "img": "6.jpg" },
+    { "id": 8, "cat": "tortas", "activo": true, "nombre": "Crumble de Manzanas", "desc": "Tarta clásica rellena de manzanas especiadas con cubierta crocante de manteca.", "precio": 18500, "img": "5.jpg" },
+    { "id": 9, "cat": "tortas", "activo": true, "nombre": "Brownie", "desc": "Húmedo e intenso brownie de chocolate con dulce de leche y merengue.", "precio": 19500, "img": "3.jpg" },
+    { "id": 10,"cat": "tortas", "activo": true, "nombre": "Torta Bruce", "desc": "Imponente bizcocho húmedo de chocolate cubierto con ganache cremosa.", "precio": 24000, "img": "2.jpg" },
+    { "id": 11,"cat": "tortas", "activo": true, "nombre": "Reversión Valeria", "desc": "Exquisita combinación artesanal de chocolate y dulce de leche.", "precio": 21000, "img": "10.jpg" },
+    { "id": 12,"cat": "tortas", "activo": true, "nombre": "Vainillas y Frutas de Estación", "desc": "Clásica charlotte con bordes de vainillas y decoración de frutas frescas.", "precio": 22000, "img": "11.jpg" },
+    
+    { "id": 13, "cat": "cookies", "activo": false, "nombre": "Alfajorcitos de Maicena", "desc": "Una explosión de sabor con suave dulce de leche y coco rallado.", "precio": 8500, "img": "13.jpg" },
+    { "id": 14, "cat": "cookies", "activo": false, "nombre": "Alfajorcitos de Marroc", "desc": "Delicadas tapitas artesanales rellenas con una suave crema sabor Marroc.", "precio": 9500, "img": "14.jpg" },
+    { "id": 15, "cat": "cookies", "activo": false, "nombre": "Alfajorcitos de Pistacho", "desc": "Rellenos de ganache de pistacho de primera calidad y toque de autor.", "precio": 11000, "img": "15.jpg" },
+    { "id": 16, "cat": "cookies", "activo": false, "nombre": "Alfajorcitos de Nuez", "desc": "Tapitas crocantes de nuez con abundante dulce de leche artesanal.", "precio": 9800, "img": "16.jpg" },
+    { "id": 17, "cat": "cookies", "activo": false, "nombre": "Cookies de Chocolate", "desc": "Galletas de autor con tropezones intensos de chocolate semiamargo.", "precio": 7500, "img": "18.jpg" },
+    { "id": 18, "cat": "cookies", "activo": false, "nombre": "Muffins Artesanales", "desc": "Esponjosos y húmedos, disponibles con arándanos frescos o chips de chocolate.", "precio": 6500, "img": "19.jpg" },
+    { "id": 19, "cat": "cookies", "activo": false, "nombre": "Cookies de queso", "desc": "Nuestras emblemáticas y adictivas galletas saladas de queso.", "precio": 8000, "img": "20.jpg" },
+
+    { "id": 20, "cat": "budines", "activo": false, "nombre": "Budín de Limón & Glacé", "desc": "Húmedo, intenso perfume cítrico con baño de limón real.", "precio": 6800, "img": "17.jpg" },
+
+    { 
+        "id": 21, 
+        "cat": "boxes", 
+        "activo": true,
+        "nombre": "BOX Navidad y Fin de Año", 
+        "desc": "Seis tentaciones pensadas para convertir la sobremesa Navideña o de Fin de Año en un momento inolvidable: Pan dulce genovés de frutos secos y pasas. Mantecol artesanal. Garrapiñadas de almendras y castañas de cajú. Budín carrot cake y chocolate blanco. Danesas de pistacho y Galletitas de jengibre. ​Una propuesta hecha con cariño y detalle para compartir o regalar estas fiestas.",
+        "precio": 60000, 
+        "img": "el1.jpg" 
+    }
+]
