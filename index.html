@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO Pasteleria</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .product-img-container {
+            width: 100%;
+            height: 12rem;
+            overflow: hidden;
+            background-color: #E6E2DD;
+            position: relative;
+        }
+        .product-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+    </style>
+</head>
+<body class="bg-[#FAF9F6] text-[#2C2A29] antialiased selection:bg-[#D4A373] selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-[#E6E2DD]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="font-serif text-2xl font-bold tracking-wide text-[#2C2A29]">
+                CO.
+            </a>
+            
+            <button onclick="toggleCartModal()" class="relative flex items-center gap-2 bg-[#2C2A29] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#A47148] transition-all shadow-sm cursor-pointer">
+                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                <span>Pedido</span>
+                <span id="cart-counter" class="absolute -top-1.5 -right-1.5 bg-[#A47148] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold border-2 border-[#FAF9F6]">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-16 md:py-20 px-4 text-center max-w-4xl mx-auto">
+        <h1 class="font-serif text-6xl sm:text-8xl font-bold text-[#2C2A29] tracking-wider">
+            CO.
+        </h1>
+        <p class="mt-4 text-base sm:text-lg text-[#2C2A29] font-light tracking-wide">
+            Pastelería con alma artesanal y materia prima de excelencia
+        </p>
+        <p class="mt-2 text-sm text-[#6B6560] italic font-serif">
+            Un nombre, una historia, una forma de hacer las cosas.
+        </p>
+        <div class="mt-4">
+            <span class="text-xs font-semibold tracking-widest uppercase text-[#A47148] bg-[#A47148]/10 px-3.5 py-1.5 rounded-full border border-[#A47148]/20 inline-block">Hecho artesanalmente</span>
+        </div>
+    </section>
+
+    <!-- Sección Acerca de Mí -->
+    <section class="max-w-3xl mx-auto px-4 pb-16">
+        <div class="bg-white border border-[#E6E2DD] rounded-3xl p-8 sm:p-12 shadow-xs relative">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FAF9F6] px-4 border border-[#E6E2DD] rounded-full text-[#A47148]">
+                <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+            </div>
+            <p class="font-serif italic text-lg sm:text-xl text-[#2C2A29] leading-relaxed text-center font-normal">
+                "A mí me llaman Co. desde chica; es el apodo con el que me nombran los míos, los que me conocen de verdad. Agasajar a quienes quiero a través de la cocina y regalarles momentos dulces siempre fue mi forma de abrazar."
+            </p>
+            <p class="mt-6 text-sm sm:text-base text-[#6B6560] font-light leading-relaxed text-center">
+                Hoy quiero compartir eso con vos. Por eso, cada preparación que sale de mi cocina lleva esa misma cercanía, el cuidado de lo hecho con amor y el compromiso absoluto de brindarte lo mejor.
+            </p>
+        </div>
+    </section>
+
+    <!-- Catálogo (Ediciones Especiales arriba de todo) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-20">
+
+        <!-- Buscador de productos arriba del catálogo -->
+        <div id="catalog-search-bar" class="max-w-xl mx-auto">
+            <div class="relative flex items-center">
+                <i data-lucide="search" class="w-4 h-4 text-[#6B6560] absolute left-4 pointer-events-none"></i>
+                <input
+                    type="search"
+                    id="catalog-search-input"
+                    oninput="handleSearchInput(this.value)"
+                    placeholder="Buscar tortas, boxes o sabores..."
+                    aria-label="Buscar productos en el catálogo"
+                    class="w-full pl-11 pr-10 py-3 rounded-full border border-[#E6E2DD] bg-white text-sm text-[#2C2A29] placeholder:text-[#6B6560] shadow-xs focus:outline-none focus:border-[#A47148] transition-all"
+                >
+                <button
+                    type="button"
+                    id="clear-search-btn"
+                    onclick="clearCatalogSearch()"
+                    aria-label="Limpiar búsqueda"
+                    class="hidden right-3.5 absolute p-1 text-[#6B6560] hover:text-[#2C2A29] cursor-pointer"
+                >
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <p id="search-results-count" class="hidden mt-2 text-center text-xs text-[#6B6560]"></p>
+        </div>
+
+        <!-- Mensaje cuando la búsqueda no encuentra coincidencias -->
+        <div id="no-search-results" class="hidden bg-white border border-[#E6E2DD] rounded-3xl p-10 text-center max-w-xl mx-auto shadow-xs space-y-3">
+            <p class="font-serif text-xl text-[#2C2A29]">No encontramos productos con esa búsqueda</p>
+            <p class="text-sm text-[#6B6560] font-light">Probá con otro nombre o ingrediente, o limpiá el filtro para ver todo el catálogo.</p>
+            <div class="pt-2">
+                <button type="button" onclick="clearCatalogSearch()" class="bg-[#2C2A29] text-white text-xs font-semibold px-5 py-2.5 rounded-xl hover:bg-[#A47148] transition-all cursor-pointer">
+                    Ver todos los productos
+                </button>
+            </div>
+        </div>
+        
+        <!-- 1. Ediciones Especiales -->
+        <section id="boxes">
+            <div class="flex items-center gap-4 mb-8">
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#2C2A29]">Ediciones Especiales</h2>
+                <div class="flex-1 h-[1px] bg-[#E6E2DD]"></div>
+            </div>
+
+            <!-- Cronómetro de Cuenta Regresiva -->
+            <div id="countdown-container" class="mb-8 bg-[#F3EFEA] border border-[#E6E2DD] rounded-2xl p-4 text-center max-w-xl mx-auto shadow-xs">
+                <p id="countdown-label" class="text-xs uppercase tracking-widest text-[#A47148] font-semibold mb-1">La Edición Especial cierra en:</p>
+                <div id="countdown-timer" class="font-serif text-lg sm:text-xl font-bold text-[#2C2A29]">
+                    Calculando tiempo...
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="grid-boxes"></div>
+        </section>
+
+        <!-- 2. Mis Creaciones -->
+        <section id="tortas">
+            <div class="flex items-center gap-4 mb-8">
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#2C2A29]">Mis Creaciones</h2>
+                <div class="flex-1 h-[1px] bg-[#E6E2DD]"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="grid-tortas"></div>
+        </section>
+
+        <!-- 3. Pequeños Bocados (pausado temporalmente) -->
+        <section id="cookies-alfajores" class="hidden">
+            <div class="flex items-center gap-4 mb-8">
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#2C2A29]">Pequeños Bocados</h2>
+                <div class="flex-1 h-[1px] bg-[#E6E2DD]"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="grid-cookies"></div>
+        </section>
+
+        <!-- 4. Budines Artesanales (pausado temporalmente) -->
+        <section id="budines" class="hidden">
+            <div class="flex items-center gap-4 mb-8">
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#2C2A29]">Budines Artesanales</h2>
+                <div class="flex-1 h-[1px] bg-[#E6E2DD]"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="grid-budines"></div>
+        </section>
+
+        <!-- Gift Card Banner -->
+        <section id="gift-card" class="bg-[#2C2A29] text-[#FAF9F6] rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden shadow-xl">
+            <div class="max-w-2xl mx-auto relative z-10 space-y-6">
+                <span class="text-xs font-semibold tracking-widest uppercase text-[#D4A373] bg-[#D4A373]/15 px-4 py-1.5 rounded-full border border-[#D4A373]/30">Gift Card CO.</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold leading-snug">
+                    Regalá, regalate o festejá momentos ricos con tus seres queridos
+                </h2>
+                <p class="text-[#E6E2DD] text-base sm:text-lg font-light leading-relaxed">
+                    Sorprendé a quien más querés con una experiencia dulce y artesanal. Adquirí una Gift Card digital personalizada para canjear por cualquiera de mis delicias.
+                </p>
+                <div class="pt-2">
+                    <button onclick="toggleGiftCardModal()" class="bg-[#D4A373] text-[#2C2A29] font-bold px-8 py-3.5 rounded-xl hover:bg-[#c29161] transition-all shadow-md inline-flex items-center gap-2 cursor-pointer">
+                        <i data-lucide="gift" class="w-5 h-5"></i>
+                        <span>Quiero regalar una Gift Card</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Carrito -->
+    <div id="cart-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs hidden flex justify-end">
+        <div class="bg-[#FAF9F6] w-full max-w-md h-full flex flex-col shadow-2xl p-6 overflow-y-auto">
+            <div class="flex items-center justify-between pb-4 border-b border-[#E6E2DD]">
+                <h3 class="font-serif text-xl font-bold text-[#2C2A29]">Tu Pedido</h3>
+                <button onclick="toggleCartModal()" class="p-2 text-[#6B6560] hover:text-[#2C2A29] cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <div id="cart-items" class="py-4 space-y-3 divide-y divide-[#E6E2DD] overflow-y-auto min-h-[180px] max-h-[38vh] shrink-0">
+                <p class="text-sm text-[#6B6560] text-center py-10">Tu carrito está vacío.</p>
+            </div>
+
+            <!-- Selector exclusivo para Box Especiales (Navidad / Fin de Año) -->
+            <div id="box-occasion-selector" class="hidden py-3.5 px-4 mb-3 rounded-2xl bg-[#F3EFEA] border border-[#E6E2DD] space-y-2">
+                <p class="text-xs font-bold uppercase tracking-wider text-[#A47148]">Box Especial — Seleccioná la fiesta</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" id="btn-occasion-navidad" onclick="selectBoxOccasion('navidad')" class="py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer bg-[#A47148] text-white border-[#A47148]">
+                        Navidad (24/12)
+                    </button>
+                    <button type="button" id="btn-occasion-findeano" onclick="selectBoxOccasion('findeano')" class="py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer bg-white text-[#2C2A29] border-[#E6E2DD] hover:border-[#A47148]">
+                        Fin de Año (31/12)
+                    </button>
+                </div>
+                <p id="box-occasion-hint" class="text-[11px] text-[#6B6560] leading-snug">
+                    Entrega el 24/12 de 12:00 a 16:00 hs.
+                </p>
+            </div>
+
+            <div class="py-3 border-t border-[#E6E2DD] space-y-2.5">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-[#A47148]">Datos para coordinar por WhatsApp</h4>
+                <input type="text" id="client-name" placeholder="Tu Nombre y Apellido" class="w-full px-4 py-2 rounded-xl border border-[#E6E2DD] bg-white text-sm focus:outline-none focus:border-[#A47148]">
+                
+                <div>
+                    <label id="delivery-date-label" class="block text-xs font-medium text-[#6B6560] mb-1">Fecha y hora estimada (Mínimo 72 hs):</label>
+                    <input type="datetime-local" id="delivery-date" class="w-full px-4 py-2 rounded-xl border border-[#E6E2DD] bg-white text-sm focus:outline-none focus:border-[#A47148]">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-[#6B6560] mb-1">Notas o dedicatoria (opcional):</label>
+                    <textarea id="client-notes" rows="2" placeholder="Ej: Dedicatoria, consulta por coordinación, etc." class="w-full px-4 py-2 rounded-xl border border-[#E6E2DD] bg-white text-sm focus:outline-none focus:border-[#A47148] resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- reCAPTCHA Carrito -->
+            <div class="py-3 flex justify-center">
+                <div class="g-recaptcha" data-sitekey="6LfBYBAuAAAAAATPREgmpDxW5MbxmtDU0CoDqUzy"></div>
+            </div>
+
+            <div class="pt-4 border-t border-[#E6E2DD]">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-medium text-[#6B6560]">Total Estimado:</span>
+                    <span id="cart-total" class="font-serif text-2xl font-bold text-[#2C2A29]">$0</span>
+                </div>
+                <button onclick="checkoutWhatsApp()" class="w-full bg-[#25D366] text-white py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-[#20ba5a] transition-all shadow-md cursor-pointer">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    <span>Enviar Pedido por WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Gift Card -->
+    <div id="giftcard-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs hidden flex items-center justify-center p-4">
+        <div class="bg-[#FAF9F6] w-full max-w-lg rounded-3xl shadow-2xl p-6 sm:p-8 overflow-y-auto max-h-[90vh] relative border border-[#E6E2DD]">
+            <div class="flex items-center justify-between pb-4 border-b border-[#E6E2DD]">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="gift" class="w-6 h-6 text-[#A47148]"></i>
+                    <h3 class="font-serif text-2xl font-bold text-[#2C2A29]">Regalar Gift Card</h3>
+                </div>
+                <button onclick="toggleGiftCardModal()" class="p-2 text-[#6B6560] hover:text-[#2C2A29] cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <div class="py-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-[#A47148] mb-1">Nombre y Apellido de quien recibe</label>
+                    <input type="text" id="gift-name" placeholder="Ej: María González" class="w-full px-4 py-2.5 rounded-xl border border-[#E6E2DD] bg-white text-sm focus:outline-none focus:border-[#A47148]">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-[#A47148] mb-1">Email de quien recibe</label>
+                        <input type="email" id="gift-email" placeholder="Ej: maria@email.com" class="w-full px-4 py-2.5 rounded-xl border border-[#E6E2DD] bg-white text-sm focus:outline-none focus:border-[#A47148]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-[#A47148] mb-1">WhatsApp de quien recibe</label>
+                        <input type="tel" id="gift-whatsapp" placeholder="Ej: +54 9 11 1234-5678" class="w-full px-4 py-2.5 rounded-xl border border-[#E6E2DD] bg-white text-sm focus:outline-none focus:border-[#A47148]">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-[#A47148] mb-1">Monto a regalar ($)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-serif font-bold text-[#A47148]">$</span>
+                        <input type="number" id="gift-amount-input" min="1000" step="500" oninput="updateGiftAmountDisplay()" placeholder="Ingresá el monto que quieras regalar" class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-[#E6E2DD] bg-white font-serif font-bold text-base text-[#2C2A29] focus:outline-none focus:border-[#A47148]">
+                    </div>
+                    <div class="mt-2 bg-[#F3EFEA] border border-[#E6E2DD] rounded-2xl p-3">
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-[#A47148] mb-1.5">Referencia de precios del catálogo (tocá para usar):</p>
+                        <div id="gift-catalog-reference" class="max-h-28 overflow-y-auto divide-y divide-[#E6E2DD] text-xs pr-1">
+                            <p class="text-[#6B6560] py-1">Cargando precios...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-[#A47148] mb-1">Dedicatoria Especial (opcional)</label>
+                    <textarea id="gift-dedication" rows="2" placeholder="Mensaje para la tarjeta..." class="w-full px-4 py-2 rounded-xl border border-[#E6E2DD] bg-white text-sm focus:outline-none focus:border-[#A47148] resize-none"></textarea>
+                </div>
+
+                <!-- reCAPTCHA Gift Card -->
+                <div class="py-1 flex justify-center scale-90 sm:scale-100">
+                    <div class="g-recaptcha" data-sitekey="6LfBYBAuAAAAAATPREgmpDxW5MbxmtDU0CoDqUzy"></div>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-[#E6E2DD]">
+                <button onclick="submitGiftCardWhatsApp()" class="w-full bg-[#25D366] text-white py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-[#20ba5a] transition-all shadow-md cursor-pointer">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    <span>Solicitar Gift Card por WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#2C2A29] text-[#FAF9F6] py-12 text-center text-sm border-t border-[#3e3b39]">
+        <p class="font-serif text-xl mb-2">CO.</p>
+        <p class="text-[#A9A4A0] font-light">Pedidos coordinados por WhatsApp: +54 11 5489-2779</p>
+        <p class="mt-6 text-[11px] tracking-widest text-[#A9A4A0]/60 font-light">
+            Creado por ⛩️AHG⛩️
+        </p>
+    </footer>
+
+    <!-- Script de lógica -->
+    <script>
+        const STORAGE_CART_KEY = 'co_pasteleria_cart_v1';
+        const STORAGE_SIG_KEY = 'co_pasteleria_catalog_sig_v1';
+
+        const CATEGORY_SECTIONS = {
+            boxes: 'boxes',
+            tortas: 'tortas',
+            cookies: 'cookies-alfajores',
+            budines: 'budines'
+        };
+
+        let productos = [];
+        let cart = [];
+        const productQuantities = {};
+        let selectedBoxOccasion = 'navidad';
+        let currentCatalogSignature = '';
+        let searchQuery = '';
+
+        // Normaliza texto para que la búsqueda ignore mayúsculas y tildes
+        function normalizeSearchText(text) {
+            return String(text || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim();
+        }
+
+        function handleSearchInput(value) {
+            searchQuery = value || '';
+            const clearBtn = document.getElementById('clear-search-btn');
+            if (clearBtn) {
+                clearBtn.classList.toggle('hidden', searchQuery.trim().length === 0);
+            }
+            renderCatalogo();
+        }
+
+        function clearCatalogSearch() {
+            const input = document.getElementById('catalog-search-input');
+            if (input) {
+                input.value = '';
+                input.focus();
+            }
+            handleSearchInput('');
+        }
+
+        function computeCatalogSignature(items) {
+            const normalized = items.map(p => ({
+                id: p.id,
+                cat: p.cat,
+                activo: p.activo !== false,
+                nombre: p.nombre,
+                desc: p.desc,
+                precio: p.precio,
+                img: p.img
+            }));
+            return JSON.stringify(normalized);
+        }
+
+        function saveCartToStorage() {
+            try {
+                localStorage.setItem(STORAGE_CART_KEY, JSON.stringify(cart));
+                if (currentCatalogSignature) {
+                    localStorage.setItem(STORAGE_SIG_KEY, currentCatalogSignature);
+                }
+            } catch (e) {
+                console.warn('No se pudo guardar el carrito en localStorage:', e);
+            }
+        }
+
+        function clearCartStorage() {
+            try {
+                localStorage.removeItem(STORAGE_CART_KEY);
+                localStorage.removeItem(STORAGE_SIG_KEY);
+            } catch (e) {
+                console.warn('No se pudo limpiar localStorage:', e);
+            }
+        }
+
+        function loadCartFromStorage() {
+            try {
+                const savedSig = localStorage.getItem(STORAGE_SIG_KEY);
+                if (!savedSig || savedSig !== currentCatalogSignature) {
+                    cart = [];
+                    clearCartStorage();
+                    localStorage.setItem(STORAGE_SIG_KEY, currentCatalogSignature);
+                    return;
+                }
+
+                const rawCart = localStorage.getItem(STORAGE_CART_KEY);
+                if (!rawCart) {
+                    cart = [];
+                    return;
+                }
+
+                const parsed = JSON.parse(rawCart);
+                if (!Array.isArray(parsed)) {
+                    cart = [];
+                    clearCartStorage();
+                    return;
+                }
+
+                const validCart = [];
+                for (const item of parsed) {
+                    const freshProd = productos.find(p => p.id === item.id && p.activo !== false);
+                    if (!freshProd || freshProd.precio !== item.precio || freshProd.nombre !== item.nombre) {
+                        cart = [];
+                        clearCartStorage();
+                        localStorage.setItem(STORAGE_SIG_KEY, currentCatalogSignature);
+                        return;
+                    }
+                    validCart.push({
+                        ...freshProd,
+                        qty: Math.max(1, parseInt(item.qty, 10) || 1)
+                    });
+                }
+
+                cart = validCart;
+            } catch (e) {
+                console.warn('Error leyendo carrito desde localStorage:', e);
+                cart = [];
+                clearCartStorage();
+            }
+        }
+
+        function getDefaultDeliveryValue() {
+            const minDate = new Date();
+            minDate.setHours(minDate.getHours() + 72);
+            const year = minDate.getFullYear();
+            const month = String(minDate.getMonth() + 1).padStart(2, '0');
+            const day = String(minDate.getDate()).padStart(2, '0');
+            const hours = String(minDate.getHours()).padStart(2, '0');
+            const minutes = String(minDate.getMinutes()).padStart(2, '0');
+            return {
+                min: `${year}-${month}-${day}T${hours}:${minutes}`,
+                value: `${year}-${month}-${day}T${hours}:${minutes}`
+            };
+        }
+
+        function applyDeliveryRulesForCart() {
+            const dateInput = document.getElementById('delivery-date');
+            const labelEl = document.getElementById('delivery-date-label');
+            if (!dateInput) return;
+
+            const hasBoxInCart = cart.some(item => item.cat === 'boxes');
+
+            if (hasBoxInCart) {
+                const dayStr = selectedBoxOccasion === 'findeano' ? '2026-12-31' : '2026-12-24';
+                const minSlot = `${dayStr}T12:00`;
+                const maxSlot = `${dayStr}T16:00`;
+
+                dateInput.min = minSlot;
+                dateInput.max = maxSlot;
+                dateInput.value = minSlot;
+
+                if (labelEl) {
+                    const fechaCorta = selectedBoxOccasion === 'findeano' ? '31/12' : '24/12';
+                    labelEl.textContent = `Fecha y hora de entrega (${fechaCorta} de 12:00 a 16:00 hs):`;
+                }
+            } else {
+                const defaults = getDefaultDeliveryValue();
+                dateInput.removeAttribute('max');
+                dateInput.min = defaults.min;
+                dateInput.value = defaults.value;
+
+                if (labelEl) {
+                    labelEl.textContent = 'Fecha y hora de entrega (Mínimo 72 hs):';
+                }
+            }
+        }
+
+        function selectBoxOccasion(occasion) {
+            selectedBoxOccasion = occasion;
+
+            const btnNavidad = document.getElementById('btn-occasion-navidad');
+            const btnFinDeAno = document.getElementById('btn-occasion-findeano');
+            const hint = document.getElementById('box-occasion-hint');
+
+            const activeClasses = ['bg-[#A47148]', 'text-white', 'border-[#A47148]'];
+            const inactiveClasses = ['bg-white', 'text-[#2C2A29]', 'border-[#E6E2DD]'];
+
+            if (occasion === 'findeano') {
+                btnFinDeAno.classList.remove(...inactiveClasses);
+                btnFinDeAno.classList.add(...activeClasses);
+                btnNavidad.classList.remove(...activeClasses);
+                btnNavidad.classList.add(...inactiveClasses);
+                if (hint) {
+                    hint.textContent = 'Entrega el 31/12 de 12:00 a 16:00 hs.';
+                }
+            } else {
+                btnNavidad.classList.remove(...inactiveClasses);
+                btnNavidad.classList.add(...activeClasses);
+                btnFinDeAno.classList.remove(...activeClasses);
+                btnFinDeAno.classList.add(...inactiveClasses);
+                if (hint) {
+                    hint.textContent = 'Entrega el 24/12 de 12:00 a 16:00 hs.';
+                }
+            }
+
+            applyDeliveryRulesForCart();
+        }
+
+        function syncBoxOccasionUI() {
+            const boxSelector = document.getElementById('box-occasion-selector');
+            if (!boxSelector) return;
+
+            const hasBoxInCart = cart.some(item => item.cat === 'boxes');
+            if (hasBoxInCart) {
+                boxSelector.classList.remove('hidden');
+            } else {
+                boxSelector.classList.add('hidden');
+            }
+            applyDeliveryRulesForCart();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            applyDeliveryRulesForCart();
+
+            const dateInput = document.getElementById('delivery-date');
+            if (dateInput) {
+                dateInput.addEventListener('change', () => {
+                    if (!cart.some(item => item.cat === 'boxes')) return;
+                    const dayStr = selectedBoxOccasion === 'findeano' ? '2026-12-31' : '2026-12-24';
+                    const minSlot = `${dayStr}T12:00`;
+                    const maxSlot = `${dayStr}T16:00`;
+
+                    if (!dateInput.value) {
+                        dateInput.value = minSlot;
+                        return;
+                    }
+                    if (dateInput.value < minSlot) {
+                        dateInput.value = minSlot;
+                    } else if (dateInput.value > maxSlot) {
+                        dateInput.value = maxSlot;
+                    }
+                });
+            }
+
+            iniciarContadorEdicionEspecial();
+        });
+
+        function iniciarContadorEdicionEspecial() {
+            const fechaLimite = new Date('2026-12-15T23:59:59').getTime();
+
+            const timerInterval = setInterval(() => {
+                const ahora = new Date().getTime();
+                const distancia = fechaLimite - ahora;
+
+                const timerElement = document.getElementById('countdown-timer');
+                const labelElement = document.getElementById('countdown-label');
+                if (!timerElement) return;
+
+                if (distancia < 0) {
+                    clearInterval(timerInterval);
+                    if (labelElement) labelElement.innerText = "Estado del Producto";
+                    timerElement.innerText = "Edición Finalizada";
+                    timerElement.classList.add('text-red-600');
+                    return;
+                }
+
+                const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+                const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+
+                const dStr = String(dias).padStart(2, '0');
+                const hStr = String(horas).padStart(2, '0');
+                const mStr = String(minutos).padStart(2, '0');
+                const sStr = String(segundos).padStart(2, '0');
+
+                timerElement.innerText = `${dStr}d : ${hStr}h : ${mStr}m : ${sStr}s`;
+            }, 1000);
+        }
+
+        async function cargarProductos() {
+            try {
+                const respuesta = await fetch(`productos.json?v=${Date.now()}`, { cache: 'no-store' });
+                if (!respuesta.ok) throw new Error('No se pudo cargar productos.json');
+                productos = await respuesta.json();
+                currentCatalogSignature = computeCatalogSignature(productos);
+                loadCartFromStorage();
+                renderCatalogo();
+                updateCartUI(false);
+            } catch (error) {
+                console.error('Error al obtener el catálogo:', error);
+            }
+        }
+
+        function renderCatalogo() {
+            const normalizedTerm = normalizeSearchText(searchQuery);
+            const hasSearch = normalizedTerm.length > 0;
+            let totalMatchedProducts = 0;
+
+            ['boxes', 'tortas', 'cookies', 'budines'].forEach(cat => {
+                const container = document.getElementById(`grid-${cat}`);
+                const section = document.getElementById(CATEGORY_SECTIONS[cat]);
+                if (!container) return;
+
+                const items = productos.filter(p => {
+                    if (p.cat !== cat || p.activo === false) return false;
+                    if (!hasSearch) return true;
+                    const haystack = normalizeSearchText(`${p.nombre} ${p.desc}`);
+                    return haystack.includes(normalizedTerm);
+                });
+
+                totalMatchedProducts += items.length;
+
+                if (section) {
+                    if (items.length === 0) {
+                        section.classList.add('hidden');
+                    } else {
+                        section.classList.remove('hidden');
+                    }
+                }
+
+                container.innerHTML = items.map(p => `
+                    <div class="bg-white rounded-2xl overflow-hidden border border-[#E6E2DD] shadow-xs flex flex-col justify-between group hover:shadow-md transition-all">
+                        <div>
+                            <div class="product-img-container">
+                                <img src="${p.img}" alt="${p.nombre}" class="group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-serif text-lg font-bold text-[#2C2A29]">${p.nombre}</h3>
+                                <p class="text-sm text-[#6B6560] mt-1 font-light leading-relaxed">${p.desc}</p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex flex-col gap-3 mt-4">
+                            <div class="flex items-center justify-between">
+                                <span class="font-serif text-xl font-bold text-[#A47148]">$${p.precio.toLocaleString('es-AR')}</span>
+                                <div class="flex items-center border border-[#E6E2DD] rounded-xl overflow-hidden bg-[#FAF9F6]">
+                                    <button onclick="changeProductQty(${p.id}, -1)" class="px-2.5 py-1 text-sm font-bold text-[#6B6560] hover:bg-[#E6E2DD] transition-all cursor-pointer">-</button>
+                                    <span id="qty-${p.id}" class="px-3 text-sm font-semibold text-[#2C2A29]">1</span>
+                                    <button onclick="changeProductQty(${p.id}, 1)" class="px-2.5 py-1 text-sm font-bold text-[#6B6560] hover:bg-[#E6E2DD] transition-all cursor-pointer">+</button>
+                                </div>
+                            </div>
+                            <button onclick="addSelectedToCart(${p.id})" class="w-full bg-[#2C2A29] text-white text-xs font-semibold py-2.5 rounded-xl hover:bg-[#A47148] active:scale-95 transition-all cursor-pointer">
+                                Agregar al Pedido
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            });
+
+            const countEl = document.getElementById('search-results-count');
+            const emptyStateEl = document.getElementById('no-search-results');
+
+            if (countEl) {
+                if (hasSearch) {
+                    countEl.classList.remove('hidden');
+                    countEl.textContent = totalMatchedProducts === 1
+                        ? `1 resultado para "${searchQuery.trim()}"`
+                        : `${totalMatchedProducts} resultados para "${searchQuery.trim()}"`;
+                } else {
+                    countEl.classList.add('hidden');
+                    countEl.textContent = '';
+                }
+            }
+
+            if (emptyStateEl) {
+                emptyStateEl.classList.toggle('hidden', !(hasSearch && totalMatchedProducts === 0));
+            }
+
+            lucide.createIcons();
+            renderGiftCatalogReference();
+        }
+
+        function changeProductQty(id, change) {
+            if (!productQuantities[id]) productQuantities[id] = 1;
+            productQuantities[id] += change;
+            if (productQuantities[id] < 1) productQuantities[id] = 1;
+            const qtyElement = document.getElementById(`qty-${id}`);
+            if (qtyElement) qtyElement.innerText = productQuantities[id];
+        }
+
+        function addSelectedToCart(id) {
+            const qty = productQuantities[id] || 1;
+            const prod = productos.find(p => p.id === id && p.activo !== false);
+            if (!prod) return;
+
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                cart.push({ ...prod, qty: qty });
+            }
+
+            productQuantities[id] = 1;
+            const qtyElement = document.getElementById(`qty-${id}`);
+            if (qtyElement) qtyElement.innerText = '1';
+
+            updateCartUI(true);
+        }
+
+        function updateCartUI(persist = true) {
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cart-counter').innerText = count;
+
+            const itemsContainer = document.getElementById('cart-items');
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = `<p class="text-sm text-[#6B6560] text-center py-10">Tu carrito está vacío.</p>`;
+                document.getElementById('cart-total').innerText = '$0';
+                if (persist) saveCartToStorage();
+                syncBoxOccasionUI();
+                return;
+            }
+
+            let total = 0;
+            itemsContainer.innerHTML = cart.map((item, index) => {
+                const subtotal = item.precio * item.qty;
+                total += subtotal;
+                return `
+                    <div class="py-3 flex justify-between items-center text-sm">
+                        <div>
+                            <p class="font-semibold text-[#2C2A29]">${item.nombre}</p>
+                            <p class="text-xs text-[#6B6560]">Cant: ${item.qty} x $${item.precio.toLocaleString('es-AR')} = <span class="font-bold text-[#A47148]">$${subtotal.toLocaleString('es-AR')}</span></p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-xs font-medium cursor-pointer">Eliminar</button>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('cart-total').innerText = `$${total.toLocaleString('es-AR')}`;
+            if (persist) saveCartToStorage();
+            syncBoxOccasionUI();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI(true);
+        }
+
+        function toggleCartModal() {
+            document.getElementById('cart-modal').classList.toggle('hidden');
+            syncBoxOccasionUI();
+        }
+
+        function toggleGiftCardModal() {
+            document.getElementById('giftcard-modal').classList.toggle('hidden');
+        }
+
+        function renderGiftCatalogReference() {
+            const refContainer = document.getElementById('gift-catalog-reference');
+            if (!refContainer) return;
+
+            const activos = productos.filter(p => p.activo !== false);
+            if (activos.length === 0) {
+                refContainer.innerHTML = `<p class="text-[#6B6560] py-1">No hay productos activos disponibles.</p>`;
+                return;
+            }
+
+            refContainer.innerHTML = activos.map(p => `
+                <button type="button" onclick="setGiftAmountFromCatalog(${p.precio})" class="w-full py-1.5 px-1 flex items-center justify-between text-left hover:bg-white/70 rounded-lg transition-colors cursor-pointer">
+                    <span class="text-[#2C2A29] truncate pr-2">${p.nombre}</span>
+                    <span class="font-serif font-bold text-[#A47148] shrink-0">$${p.precio.toLocaleString('es-AR')}</span>
+                </button>
+            `).join('');
+        }
+
+        function setGiftAmountFromCatalog(price) {
+            const input = document.getElementById('gift-amount-input');
+            if (input) {
+                input.value = price;
+                input.focus();
+            }
+        }
+
+        function updateGiftAmountDisplay() {
+            const input = document.getElementById('gift-amount-input');
+            if (input && Number(input.value) < 0) {
+                input.value = '';
+            }
+        }
+
+        function submitGiftCardWhatsApp() {
+            const nameInput = document.getElementById('gift-name');
+            const emailInput = document.getElementById('gift-email');
+            const whatsappInput = document.getElementById('gift-whatsapp');
+            const amountInput = document.getElementById('gift-amount-input');
+            const dedicationInput = document.getElementById('gift-dedication');
+
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const whatsapp = whatsappInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+            const dedication = dedicationInput.value.trim();
+
+            if (!name || !email || !whatsapp) {
+                alert('Por favor, completá el nombre, email y WhatsApp de la persona que recibe la Gift Card.');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Por favor, ingresá un email válido para quien recibe la Gift Card.');
+                return;
+            }
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('Por favor, ingresá un monto válido a regalar.');
+                return;
+            }
+
+            const recaptchaResponse = grecaptcha.getResponse(1);
+            if (!recaptchaResponse) {
+                alert('Por favor, completá la verificación de reCAPTCHA ("No soy un robot").');
+                return;
+            }
+
+            let mensaje = `*SOLICITUD DE GIFT CARD - CO*\n`;
+            mensaje += `- Destinatario: ${name}\n`;
+            mensaje += `- Email del destinatario: ${email}\n`;
+            mensaje += `- WhatsApp del destinatario: ${whatsapp}\n`;
+            mensaje += `- *MONTO GIFT CARD: $${amount.toLocaleString('es-AR')}*\n`;
+            
+            if (dedication) mensaje += `- Dedicatoria: "${dedication}"\n`;
+            mensaje += `\n¡Deseo coordinar el pago y emisión de esta Gift Card!`;
+
+            const telefono = '5491154892779';
+            window.open(`https://wa.me/${telefono}?text=` + encodeURIComponent(mensaje), '_blank');
+            
+            nameInput.value = '';
+            emailInput.value = '';
+            whatsappInput.value = '';
+            amountInput.value = '';
+            dedicationInput.value = '';
+            grecaptcha.reset(1);
+            toggleGiftCardModal();
+        }
+
+        function generarNumeroPedido() {
+            return `CO-${Date.now().toString().slice(-5)}-${Math.floor(100 + Math.random() * 900)}`;
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) {
+                alert('Por favor, agrega al menos un producto a tu pedido.');
+                return;
+            }
+
+            const nameInput = document.getElementById('client-name');
+            const dateInput = document.getElementById('delivery-date');
+            const notesInput = document.getElementById('client-notes');
+            
+            const name = nameInput.value.trim();
+            const deliveryDate = dateInput.value;
+            const notes = notesInput.value.trim();
+
+            if (!name || !deliveryDate) {
+                alert('Por favor, completa tu nombre y la fecha/hora estimada.');
+                return;
+            }
+
+            const recaptchaResponse = grecaptcha.getResponse(0);
+            if (!recaptchaResponse) {
+                alert('Por favor, completá la verificación de reCAPTCHA ("No soy un robot").');
+                return;
+            }
+
+            const formattedDate = new Date(deliveryDate).toLocaleString('es-AR', {
+                dateStyle: 'full',
+                timeStyle: 'short'
+            });
+
+            const hasBoxInCart = cart.some(item => item.cat === 'boxes');
+            const occasionLabel = selectedBoxOccasion === 'findeano'
+                ? 'Fin de Año (31/12 de 12 a 16 hs)'
+                : 'Navidad (24/12 de 12 a 16 hs)';
+
+            const nroPedido = generarNumeroPedido();
+            let total = 0;
+
+            let mensaje = `*NUEVO PEDIDO WEB*\n`;
+            mensaje += `- Nro de Pedido: ${nroPedido}\n`;
+            mensaje += `- Cliente: ${name}\n`;
+            mensaje += `- Coordinación: Por WhatsApp (sin envíos)\n`;
+            if (hasBoxInCart) {
+                mensaje += `- Edición Box: ${occasionLabel}\n`;
+            }
+            mensaje += `- Fecha/Hora Entrega: ${formattedDate}\n`;
+            
+            if (notes) mensaje += `- Notas/Dedicatoria: ${notes}\n`;
+            mensaje += `\n*Detalle del pedido:*`;
+
+            cart.forEach(item => {
+                const subtotal = item.precio * item.qty;
+                total += subtotal;
+                mensaje += `\n> ${item.qty}x ${item.nombre} ($${item.precio.toLocaleString('es-AR')} c/u = $${subtotal.toLocaleString('es-AR')})`;
+            });
+
+            mensaje += `\n\n*TOTAL ESTIMADO: $${total.toLocaleString('es-AR')}*`;
+
+            const telefono = '5491154892779';
+            window.open(`https://wa.me/${telefono}?text=` + encodeURIComponent(mensaje), '_blank');
+
+            cart = [];
+            nameInput.value = '';
+            notesInput.value = '';
+            updateCartUI(true);
+            grecaptcha.reset(0);
+            toggleCartModal();
+        }
+
+        window.onload = cargarProductos;
+    </script>
+</body>
+</html>
